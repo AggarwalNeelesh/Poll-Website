@@ -132,19 +132,19 @@
             <div class="py-2 h5"><b>{{i.question}}</b></div>
             <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
                 <input type='hidden' name='qid' value="{{i.Q_id}}">
-                <label class="options">{{i.op1}}
+                <label class="options">{{i.op1}} <span id='{{i.Q_id}}op1'></span>
                     <input type="radio" id="op" name="op" value="1">
                     <span class="checkmark"></span>
                 </label>
-                <label class="options">{{i.op2}}
+                <label class="options">{{i.op2}} <span id='{{i.Q_id}}op2'></span>
                     <input type="radio" id="op" name="op" value="2">
                     <span class="checkmark"></span>
                 </label>
-                <label class="options">{{i.op3}}
+                <label class="options">{{i.op3}}<span id='{{i.Q_id}}op3'></span>
                     <input type="radio" id="op" name="op" value="3">
                     <span class="checkmark"></span>
                 </label>
-                <label class="options">{{i.op4}}
+                <label class="options">{{i.op4}}<span id='{{i.Q_id}}op4'></span>
                     <input type="radio" id="op" name="op" value="4">
                     <span class="checkmark"></span>
                 </label>
@@ -172,20 +172,22 @@
         //var s = "{{username}}";
         console.log("Homepage");
         console.log(localStorage.getItem('username'));
-        {% if AlreadyAnswered %}
-            console.log("AlreadyAnswered");
-            status = 'status'+{{qid}}
-            document.getElementById(status).innerHTML = "<p><b>You Have Already Answered : Correct Answer is "+{{op0}}+"</b></p>";
-        {% endif %}
-        {% if WrongAnswered %}
-            console.log("wrongAnswered");
-            status = 'status'+{{qid}}
-            document.getElementById(status).innerHTML = "<p><b>You Got Wrong Answer : Correct Answer is "+{{op0}}+"</b></p>";
-        {% endif %}
-        {% if RightAnswered %}
-            console.log("RightAnswered");
-            status = 'status'+{{qid}}
-            document.getElementById(status).innerHTML = "<p><b>You Got Correct Answer !  ("+{{op0}}+")</b></p>";
+        {% if Voted %}
+            {% if AlreadyVoted %}
+                console.log("AlreadyAnswered");
+                status = 'status'+{{qid}}
+                document.getElementById(status).innerHTML = "<p><b>You Have Already Voted</b></p>";
+            {% endif %}
+            console.log("You have voted");
+            spanid1 = {{qid}} +"op1";
+            spanid2 = {{qid}} +"op2";
+            spanid3 = {{qid}} +"op3";
+            spanid4 = {{qid}} +"op4";
+            document.getElementById(spanid1).innerHTML = "  ____Votes :- "+{{op1}}+"";
+            document.getElementById(spanid2).innerHTML = "  ____Votes :- "+{{op2}}+"";
+            document.getElementById(spanid3).innerHTML = "  ____Votes :- "+{{op3}}+"";
+            document.getElementById(spanid4).innerHTML = "  ____Votes :- "+{{op4}}+"";
+            console.log({{op1}},{{op2}},{{op3}},{{op4}});
         {% endif %}
 
     </script>

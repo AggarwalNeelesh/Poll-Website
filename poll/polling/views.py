@@ -69,8 +69,7 @@ def createquestion(request):
         opt2 = request.POST.get('opt2')
         opt3 = request.POST.get('opt3')
         opt4 = request.POST.get('opt4')
-        opt0 = request.POST.get('opt0')
-        question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, op0=opt0, user_id=u.user_id)
+        question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, user_id=u.user_id)
         question.save()
         allqueslist = Question.objects.all()
         return render(request, 'polling/homepage.html', {'quesList': allqueslist})
@@ -78,24 +77,45 @@ def createquestion(request):
 
 
 def votes(request):
+    # Method to check that which user has voted for the question
     allqueslist = Question.objects.all()
     if request.method == 'POST':
         global Uname
+        # Selected Option by User is op
         op = request.POST.get('op')
         qid = request.POST.get('qid')
         us = User.objects.filter(username=Uname)
+        ques = Question.objects.filter(Q_id=qid)[0]
         print(Uname, us)
+
+        # If User is not logged in
         if len(us) == 0:
             return render(request, 'polling/login.html')
         u = us[0]
+        # Fetching If the user has voted this Q already
         votes_status = Votes.objects.filter(user_id=u.user_id, Q_id=qid)
-        op0 = Question.objects.filter(Q_id=qid)[0].op0
+
+        already_voted = False
+        # User has already voted
         if len(votes_status) == 1:
-            return render(request, 'polling/homepage.html', {"AlreadyAnswered": True, "op0": op0, 'quesList': allqueslist, "qid": qid})
-        vote = Votes(user_id=u.user_id, Q_id=qid)
-        vote.save()
-        if op != op0:
-            return render(request, 'polling/homepage.html', {"WrongAnswered": True, "op0": op0, 'quesList': allqueslist, "qid": qid})
+            already_voted = True
         else:
-            return render(request, 'polling/homepage.html', {"RightAnswered": True, "op0": op0, 'quesList': allqueslist, "qid": qid})
+            # Saving the vote of user
+            vote = Votes(user_id=u.user_id, Q_id=qid)
+            vote.save()
+            print(op)
+            # Updating votes on options of the question
+            if op == "1":
+                ques.vop1 += 1
+            if op == "2":
+                ques.vop2 += 1
+            if op == "3":
+                ques.vop3 += 1
+            if op == "4":
+                ques.vop4 += 1
+            ques.save()
+
+        dic = {'Voted': True, "AlreadyVoted": already_voted, 'quesList': allqueslist, "op1": ques.vop1, "op2": ques.vop2, "op3": ques.vop3, "op4": ques.vop4, "qid": qid}
+        return render(request, 'polling/homepage.html', dic)
+
     return render(request, 'polling/homepage.html', {'quesList': allqueslist})
