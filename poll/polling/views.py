@@ -1,10 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import User, Question, Votes
-
 Uname = ""
+Ulogin = False
 
 
 def login(request):
+    # If user already logged in
+    global Ulogin
+    print("Ulogin")
+    print(Ulogin)
+    if Ulogin:
+        return redirect('/homepage')
+
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -14,11 +21,15 @@ def login(request):
             return render(request, 'polling/login.html', {"UserNotFound": True})
         if password != user_list[0].password:
             return render(request, 'polling/login.html', {"IncorrectPassword": True})
+
         # Now we will go to home page
         global Uname
         Uname = username
-        allqueslist = Question.objects.all()
-        return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': username})
+
+        Ulogin = True
+        return redirect('/homepage')
+        # allqueslist = Question.objects.all()
+        # return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': username})
     else:
         return render(request, 'polling/login.html')
 
@@ -43,37 +54,63 @@ def register(request):
         return render(request, 'polling/register.html')
 
 
+def logout(request):
+    global Uname
+    Uname = ""
+    global Ulogin
+    Ulogin = False
+    return redirect('/login')
+
+
+def homepage(request):
+    global Ulogin
+    if Ulogin:
+        allqueslist = Question.objects.all()
+        return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': Uname})
+    else:
+        return render(request, 'polling/login.html')
+
+
 def profile(request):
     global Uname
-    u = User.objects.filter(username=Uname)[0]
-    print(Uname, u.name)
-    allqueslist = Question.objects.filter(user_id=u.user_id)
-    dic = {"name": u.name, "email": u.email, "phone": u.phone, "question": u.questions, 'quesList': allqueslist}
-    return render(request, 'polling/profile.html', dic)
+    global Ulogin
+    if Ulogin:
+        u = User.objects.filter(username=Uname)[0]
+        print(Uname, u.name)
+        allqueslist = Question.objects.filter(user_id=u.user_id)
+        dic = {"name": u.name, "email": u.email, "phone": u.phone, "question": u.questions, 'quesList': allqueslist}
+        return render(request, 'polling/profile.html', dic)
+    else:
+        return render(request, 'polling/login.html')
 
 
 def createquestion(request):
     global Uname
-    if request.method == 'POST':
-        us = User.objects.filter(username=Uname)
-        print(Uname, us)
-        if len(us) == 0:
-            return render(request, 'polling/login.html')
-        u = us[0]
-        if u.questions >= 5:
-            return render(request, 'polling/createquestion.html', {"LimitExceeded": True})
-        u.questions += 1
-        u.save()
-        ques = request.POST.get('ques')
-        opt1 = request.POST.get('opt1')
-        opt2 = request.POST.get('opt2')
-        opt3 = request.POST.get('opt3')
-        opt4 = request.POST.get('opt4')
-        question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, user_id=u.user_id)
-        question.save()
-        allqueslist = Question.objects.all()
-        return render(request, 'polling/homepage.html', {'quesList': allqueslist})
-    return render(request, 'polling/createquestion.html')
+    global Ulogin
+    if Ulogin:
+        if request.method == 'POST':
+            us = User.objects.filter(username=Uname)
+            print(Uname, us)
+            if len(us) == 0:
+                return render(request, 'polling/login.html')
+            u = us[0]
+            if u.questions >= 5:
+                return render(request, 'polling/createquestion.html', {"LimitExceeded": True})
+            u.questions += 1
+            u.save()
+            ques = request.POST.get('ques')
+            tag = request.POST.get('tag')
+            opt1 = request.POST.get('opt1')
+            opt2 = request.POST.get('opt2')
+            opt3 = request.POST.get('opt3')
+            opt4 = request.POST.get('opt4')
+            question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, user_id=u.user_id)
+            question.save()
+            allqueslist = Question.objects.all()
+            return render(request, 'polling/homepage.html', {'quesList': allqueslist})
+        return render(request, 'polling/createquestion.html')
+    else:
+        return render(request, 'polling/login.html')
 
 
 def votes(request):
@@ -115,7 +152,8 @@ def votes(request):
                 ques.vop4 += 1
             ques.save()
 
-        dic = {'Voted': True, "AlreadyVoted": already_voted, 'quesList': allqueslist, "op1": ques.vop1, "op2": ques.vop2, "op3": ques.vop3, "op4": ques.vop4, "qid": qid}
+        dic = {'Voted': True, "AlreadyVoted": already_voted, 'quesList': allqueslist, "op1": ques.vop1,
+               "op2": ques.vop2, "op3": ques.vop3, "op4": ques.vop4, "qid": qid}
         return render(request, 'polling/homepage.html', dic)
 
     return render(request, 'polling/homepage.html', {'quesList': allqueslist})

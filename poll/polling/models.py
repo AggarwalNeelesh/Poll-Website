@@ -18,8 +18,10 @@ class User(models.Model):
 class Question(models.Model):
     # Model to save all the Questions uploaded by User
     Q_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()
+    user_id = models.IntegerField(default=None)
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.CharField(max_length=5000)
+    tag = models.CharField(max_length=100, default='All')
     op1 = models.CharField(max_length=500)
     op2 = models.CharField(max_length=500)
     op3 = models.CharField(max_length=500)
@@ -38,5 +40,7 @@ class Question(models.Model):
 class Votes(models.Model):
     # Model to save that which user has voted which Question
     v_id = models.AutoField(primary_key=True)
-    user_id = models.IntegerField()
-    Q_id = models.IntegerField()
+    # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    # Q_id = models.ForeignKey(Question, on_delete=models.CASCADE)
+    user_id = models.IntegerField(default=None)
+    Q_id = models.IntegerField(default=None)
