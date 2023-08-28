@@ -65,8 +65,29 @@ def logout(request):
 def homepage(request):
     global Ulogin
     if Ulogin:
-        allqueslist = Question.objects.all()
-        return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': Uname})
+        tag = 'All'
+
+        if request.method == 'POST':
+            tag = request.POST.get('tag') or 'All'
+
+        if tag == 'All':
+            allqueslist = Question.objects.all()
+        else:
+            allqueslist = Question.objects.filter(tag=tag)
+
+        u = User.objects.filter(username=Uname)[0]
+        for i in allqueslist:
+            votes_status = Votes.objects.filter(user_id=u.user_id, Q_id=i.Q_id)
+            if len(votes_status) != 0:
+                # Voted Already
+                setattr(i, 'alreadyVoted', True)
+            # else:
+            #     setattr(i, 'AlreadyVoted', False)
+
+        # print(type(allqueslist[0].AlreadyVoted))
+        allTags = Question.objects.values('tag').distinct()
+        return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': Uname,
+                                                         'allTags': allTags})
     else:
         return render(request, 'polling/login.html')
 
@@ -104,7 +125,7 @@ def createquestion(request):
             opt2 = request.POST.get('opt2')
             opt3 = request.POST.get('opt3')
             opt4 = request.POST.get('opt4')
-            question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, user_id=u.user_id)
+            question = Question(question=ques, op1=opt1, op2=opt2, op3=opt3, op4=opt4, user_id=u.user_id, tag=tag)
             question.save()
             allqueslist = Question.objects.all()
             return render(request, 'polling/homepage.html', {'quesList': allqueslist})
@@ -114,29 +135,22 @@ def createquestion(request):
 
 
 def votes(request):
+    global Ulogin
+    if not Ulogin:
+        return render(request, 'polling/login.html')
     # Method to check that which user has voted for the question
-    allqueslist = Question.objects.all()
     if request.method == 'POST':
         global Uname
         # Selected Option by User is op
         op = request.POST.get('op')
         qid = request.POST.get('qid')
-        us = User.objects.filter(username=Uname)
+        u = User.objects.filter(username=Uname)[0]
         ques = Question.objects.filter(Q_id=qid)[0]
-        print(Uname, us)
 
-        # If User is not logged in
-        if len(us) == 0:
-            return render(request, 'polling/login.html')
-        u = us[0]
         # Fetching If the user has voted this Q already
         votes_status = Votes.objects.filter(user_id=u.user_id, Q_id=qid)
 
-        already_voted = False
-        # User has already voted
-        if len(votes_status) == 1:
-            already_voted = True
-        else:
+        if len(votes_status) == 0:
             # Saving the vote of user
             vote = Votes(user_id=u.user_id, Q_id=qid)
             vote.save()
@@ -152,8 +166,4 @@ def votes(request):
                 ques.vop4 += 1
             ques.save()
 
-        dic = {'Voted': True, "AlreadyVoted": already_voted, 'quesList': allqueslist, "op1": ques.vop1,
-               "op2": ques.vop2, "op3": ques.vop3, "op4": ques.vop4, "qid": qid}
-        return render(request, 'polling/homepage.html', dic)
-
-    return render(request, 'polling/homepage.html', {'quesList': allqueslist})
+    return redirect('/homepage')

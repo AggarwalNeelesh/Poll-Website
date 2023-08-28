@@ -7,116 +7,108 @@
                 <div class="position-sticky">
                   <div class="list-group list-group-flush mx-3 mt-4 px-5">
                       <h3>Tags :</h3>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple active">
-                      <i class="fas fa-chart-area fa-fw me-3"></i><span>Webiste traffic</span>
-                    </a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"
-                      ><i class="fas fa-lock fa-fw me-3"></i><span>Password</span></a>
-                    <a href="#" class="list-group-item list-group-item-action py-2 ripple"
-                      ><i class="fas fa-chart-line fa-fw me-3"></i><span>Analytics</span></a>
+                      {% for i in allTags %}
+                        <form id='t{{i.tag}}' action="http://127.0.0.1:8000/homepage/" method = 'post'>
+                            {% csrf_token %}
+                            <label class="options h3">{{i.tag}}
+                                <input type="submit" id="tag" name="tag" value={{i.tag}}>
+                                <span class="checkmark"></span>
+                            </label>
+                        </form>
+                      {% endfor%}
                   </div>
                 </div>
               </nav>
               <!-- Sidebar -->
         </div>
         <div class="col-9">
+            <!-- Question List -->
             {% for i in quesList reversed %}
+
             <form id='q{{i.Q_id}}' action="http://127.0.0.1:8000/votes/" method = 'post'>
                 {% csrf_token %}
-            <div class="questionContainer mt-sm-5 my-1" >
-                <div class="question" >
-                    <div class="py-2 h2 mx-2 mb-5"><b>{{i.question}}</b></div>
-                    <div class="" id="options">
-                        <input type='hidden' name='qid' value="{{i.Q_id}}">
+                <div class="questionContainer mt-sm-5 my-1" >
+                    <div class="question" >
+                        <div class="py-2 h2 mx-2 mb-5"><b>{{i.question}}</b></div>
+                        <div class="" id="options">
+                            <input type='hidden' name='qid' value="{{i.Q_id}}">
 
-                        <div class="row">
-                            <div class="col">
-                                <label class="options h3">{{i.op1}}
-                                    <input type="radio" id="op" name="op" value="1">
-                                    <span class="checkmark">
-                                    </span>
-                                </label>
+                            <div class="row">
+                                <div class="col">
+                                    <label class="options h3">{{i.op1}}
+                                        <input type="radio" id="op" name="op" value="1">
+                                        <span class="checkmark">
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>{{i.vop1}} Votes</span>
+                                    {% endif %}
+                                </div>
                             </div>
-                            <div class="col">
-                                <span id='{{i.Q_id}}op1'></span>
+
+                            <div class="row">
+                                <div class="col">
+                                    <label class="options h3">{{i.op2}}
+                                        <input type="radio" id="op" name="op" value="2">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>{{i.vop2}} Votes</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <label class="options h3">{{i.op3}}
+                                        <input type="radio" id="op" name="op" value="3">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>{{i.vop3}} Votes</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <label class="options h3">{{i.op4}}
+                                        <input type="radio" id="op" name="op" value="4">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>{{i.vop4}} Votes</span>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="row">
-                            <div class="col">
-                                <label class="options h3">{{i.op2}}
-                                    <input type="radio" id="op" name="op" value="2">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="col">
-                                <span id='{{i.Q_id}}op2'></span>
-                            </div>
+                    <div class="d-flex align-items-center pt-3 row">
+                        <div id="prev" class="col">
+                            {% if i.alreadyVoted %}
+                                <button class="pr-5 button" disabled>Already Voted</button>
+                            {% else %}
+                                <button class="pr-5 button">Submit</button>
+                            {% endif %}
+
                         </div>
+                        <div class="float-right col">
 
-                        <div class="row">
-                            <div class="col">
-                                <label class="options h3">{{i.op3}}
-                                    <input type="radio" id="op" name="op" value="3">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="col">
-                                <span id='{{i.Q_id}}op3'></span>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
-                                <label class="options h3">{{i.op4}}
-                                    <input type="radio" id="op" name="op" value="4">
-                                    <span class="checkmark"></span>
-                                </label>
-                            </div>
-                            <div class="col">
-                                <span id='{{i.Q_id}}op4'></span>
-                            </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="d-flex align-items-center pt-3 row">
-                    <div id="prev" class="col">
-                        <button class="pr-5 button">Submit</button>
-                    </div>
-                    <div class="float-right col">
-                        <span id='status{{i.Q_id}}'></span>
-                    </div>
-                </div>
-            </div>
             </form>
             {% endfor %}
+            <!-- Question List -->
         </div>
     </div>
-
-    <script type="text/javascript">
-        console.log(localStorage.getItem('username'));
-
-        {% if Voted or AlreadyVoted %}
-            {% if AlreadyVoted %}
-                console.log("AlreadyAnswered");
-                status = 'status'+{{qid}}
-                document.getElementById(status).innerHTML = "<p><b>You Have Already Voted</b></p>";
-            {% endif %}
-            spanid1 = {{qid}} +"op1";
-            spanid2 = {{qid}} +"op2";
-            spanid3 = {{qid}} +"op3";
-            spanid4 = {{qid}} +"op4";
-            total = {{op1}}+{{op2}}+{{op3}}+{{op4}};
-            vote1 = {{op1}}*100/total;
-            vote2 = {{op2}}*100/total;
-            vote3 = {{op3}}*100/total;
-            vote4 = {{op4}}*100/total;
-            if(vote1!=0)document.getElementById(spanid1).innerHTML = "Votes :- " +vote1 +"%";
-            if(vote2!=0)document.getElementById(spanid2).innerHTML = "Votes :- " +vote2 +"%";
-            if(vote3!=0)document.getElementById(spanid3).innerHTML = "Votes :- " +vote3 +"%";
-            if(vote4!=0)document.getElementById(spanid4).innerHTML = "Votes :- " +vote4+ "%";
-            console.log({{op1}},{{op2}},{{op3}},{{op4}});
-        {% endif %}
-    </script>
 {% endblock %}
