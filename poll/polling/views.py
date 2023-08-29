@@ -1,37 +1,44 @@
 from django.shortcuts import render, redirect
 from .models import User, Question, Votes
-Uname = ""
-Ulogin = False
+from django.contrib.auth.models import User as UserAuth
+from django.contrib.auth import authenticate, login as loginUser, logout as logoutUser
 
 
 def login(request):
     # If user already logged in
-    global Ulogin
-    print("Ulogin")
-    print(Ulogin)
-    if Ulogin:
+    if request.user.is_authenticated:
         return redirect('/homepage')
 
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user_list = User.objects.filter(username=username)
-        # When User was not found
-        if len(user_list) == 0:
-            return render(request, 'polling/login.html', {"UserNotFound": True})
-        if password != user_list[0].password:
-            return render(request, 'polling/login.html', {"IncorrectPassword": True})
 
-        # Now we will go to home page
-        global Uname
-        Uname = username
+        userauth = authenticate(username=username, password=password)
+        if userauth is not None:
+            # A backend authenticated the credentials
+            loginUser(request, userauth)
+            return redirect('/homepage')
+        else:
+            # No backend authenticated the credentials
+            return render(request, 'polling/login.html')
 
-        Ulogin = True
-        return redirect('/homepage')
-        # allqueslist = Question.objects.all()
-        # return render(request, 'polling/homepage.html', {'quesList': allqueslist, 'username': username})
-    else:
-        return render(request, 'polling/login.html')
+    return render(request, 'polling/login.html')
+    #
+    #     user_list = User.objects.filter(username=username)
+    #     # When User was not found
+    #     if len(user_list) == 0:
+    #         return render(request, 'polling/login.html', {"UserNotFound": True})
+    #     if password != user_list[0].password:
+    #         return render(request, 'polling/login.html', {"IncorrectPassword": True})
+    #
+    #     # Now we will go to home page
+    #     global Uname
+    #     Uname = username
+    #
+    #     Ulogin = True
+    #     return redirect('/homepage')
+    # else:
+    #     return render(request, 'polling/login.html')
 
 
 def register(request):
@@ -48,6 +55,10 @@ def register(request):
         # Creating User
         user = User(name=name, username=username, email=email, phone=phone, password=password, questions=0)
         user.save()
+
+        userauth = UserAuth.objects.create_user(username=username, password=password)
+        userauth.save()
+
         login(request)
         return render(request, 'polling/login.html')
     else:
@@ -55,16 +66,13 @@ def register(request):
 
 
 def logout(request):
-    global Uname
-    Uname = ""
-    global Ulogin
-    Ulogin = False
+    logoutUser(request)
     return redirect('/login')
 
 
 def homepage(request):
-    global Ulogin
-    if Ulogin:
+    Uname = request.user.username
+    if request.user.is_authenticated:
         tag = 'All'
 
         if request.method == 'POST':
@@ -93,9 +101,8 @@ def homepage(request):
 
 
 def profile(request):
-    global Uname
-    global Ulogin
-    if Ulogin:
+    Uname = request.user.username
+    if request.user.is_authenticated:
         u = User.objects.filter(username=Uname)[0]
         print(Uname, u.name)
         allqueslist = Question.objects.filter(user_id=u.user_id)
@@ -106,9 +113,8 @@ def profile(request):
 
 
 def createquestion(request):
-    global Uname
-    global Ulogin
-    if Ulogin:
+    Uname = request.user.username
+    if request.user.is_authenticated:
         if request.method == 'POST':
             us = User.objects.filter(username=Uname)
             print(Uname, us)
@@ -135,12 +141,11 @@ def createquestion(request):
 
 
 def votes(request):
-    global Ulogin
-    if not Ulogin:
+    if not request.user.is_authenticated:
         return render(request, 'polling/login.html')
     # Method to check that which user has voted for the question
     if request.method == 'POST':
-        global Uname
+        Uname = request.user.username
         # Selected Option by User is op
         op = request.POST.get('op')
         qid = request.POST.get('qid')
