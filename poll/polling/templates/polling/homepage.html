@@ -6,9 +6,9 @@
               <nav id="sidebarMenu" class="collapse d-lg-block sidebar collapse bg-white">
                 <div class="position-sticky">
                   <div class="list-group list-group-flush mx-3 mt-4 px-5">
-                      <h3>Tags :</h3>
+                      <h3 class="tag-head">Tags</h3>
                       {% for i in allTags %}
-                        <form id='t{{i.tag}}' action="http://127.0.0.1:8000/homepage/" method = 'post'>
+                        <form id='t{{i.tag}}' class="tag" action="http://127.0.0.1:8000/homepage/" method = 'post'>
                             {% csrf_token %}
                             <label class="options h3">{{i.tag}}
                                 <input type="submit" id="tag" name="tag" value={{i.tag}}>
@@ -25,70 +25,86 @@
             <!-- Question List -->
             {% for i in quesList reversed %}
 
-            <form id='q{{i.Q_id}}' action="http://127.0.0.1:8000/votes/" method = 'post'>
+            <form id='q{{i.Q_id}}' class="questionbox" action="http://127.0.0.1:8000/votes/" method = 'post'>
                 {% csrf_token %}
                 <div class="questionContainer mt-sm-5 my-1" >
-                    <div class="question" >
+                    <div >
                         <div class="py-2 h2 mx-2 mb-5"><b>{{i.question}}</b></div>
                         <div class="" id="options">
                             <input type='hidden' name='qid' value="{{i.Q_id}}">
 
                             <div class="row">
                                 <div class="col">
-                                    <label class="options h3">{{i.op1}}
-                                        <input type="radio" id="op" name="op" value="1">
-                                        <span class="checkmark">
-                                        </span>
-                                    </label>
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="options h3">{{i.op1}}
+                                                <input type="radio" id="op" name="op" value="1">
+                                                <span class="checkmark">
+                                                </span>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            {% if i.alreadyVoted %}
+                                                <span class='vop'>[ {{i.vop1}} Votes ]</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col">
-                                    {% if i.alreadyVoted %}
-                                        <span class='vop'>{{i.vop1}} Votes</span>
-                                    {% endif %}
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="options h3">{{i.op2}}
+                                                <input type="radio" id="op" name="op" value="2">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            {% if i.alreadyVoted %}
+                                                <span class='vop'>[ {{i.vop2}} Votes ]</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="options h3">{{i.op3}}
+                                                <input type="radio" id="op" name="op" value="3">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            {% if i.alreadyVoted %}
+                                                <span class='vop'>[ {{i.vop3}} Votes ]</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="row">
+                                        <div class="col-9">
+                                            <label class="options h3">{{i.op4}}
+                                                <input type="radio" id="op" name="op" value="4">
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </div>
+                                        <div class="col-3">
+                                            {% if i.alreadyVoted %}
+                                                <span class='vop'>[ {{i.vop4}} Votes ]</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label class="options h3">{{i.op2}}
-                                        <input type="radio" id="op" name="op" value="2">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    {% if i.alreadyVoted %}
-                                        <span class='vop'>{{i.vop2}} Votes</span>
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label class="options h3">{{i.op3}}
-                                        <input type="radio" id="op" name="op" value="3">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    {% if i.alreadyVoted %}
-                                        <span class='vop'>{{i.vop3}} Votes</span>
-                                    {% endif %}
-                                </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col">
-                                    <label class="options h3">{{i.op4}}
-                                        <input type="radio" id="op" name="op" value="4">
-                                        <span class="checkmark"></span>
-                                    </label>
-                                </div>
-                                <div class="col">
-                                    {% if i.alreadyVoted %}
-                                        <span class='vop'>{{i.vop4}} Votes</span>
-                                    {% endif %}
-                                </div>
-                            </div>
+
+
+
+
                         </div>
                     </div>
 

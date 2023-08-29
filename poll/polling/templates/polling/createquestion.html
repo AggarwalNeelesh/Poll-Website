@@ -1,32 +1,32 @@
 {% extends "polling/index.html" %}
 {% block createQuestion %}
-    <h1 class="px-5 text-center">Create Question</h1>
-   <div class="questionContainer">
-    <form id="question-form" class="form" action="http://127.0.0.1:8000/createquestion/" method="post">{% csrf_token %}
+    <h1 style="font-size: 30px;margin-left: 70px;color: #17a2b8;font-weight: 600;">Create Question</h1>
+
+    <form id="question-form" class="form questionContainer" style="margin-left: 70px;" action="http://127.0.0.1:8000/createquestion/" method="post">{% csrf_token %}
       <div class="form-group">
-        <label for="exampleFormControlInput1">Question</label>
-        <input type="text" class="form-control" id="ques" name="ques" placeholder = "Write your Question" required>
+        <label for="exampleFormControlInput1" style="font-size: 25px;font-weight: 600;">Question</label>
+        <textarea style="font-size: 20px;color:black;" type="text" class="form-control" id="ques" name="ques" placeholder = "Write your Question" required></textarea>
         <br>
       </div>
       <div class="form-group">
-        <label for="tag">Tag</label>
-        <input type="text" class="form-control" id="tag" name="tag" placeholder="tag Default = 'All'" required>
+        <label for="tag" style="font-size: 25px;font-weight: 600;color:white">Tag :</label>
+        <input style="font-size: 20px;" type="text" class="form-control" id="tag" name="tag" placeholder="tag Default = 'All'" required>
+      </div>
+        <label  style="font-size: 25px;font-weight: 600;">Fill Options :</label>
+      <div class="form-group">
+        <input style="font-size: 18px;" type="text" class="form-control" id="opt1" name="opt1" placeholder="Option 1" required>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" id="opt1" name="opt1" placeholder="Option 1" required>
+        <input type="text" style="font-size: 18px;" class="form-control" id="opt2" name="opt2" placeholder="Option 2" required>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" id="opt2" name="opt2" placeholder="Option 2" required>
+        <input type="text" style="font-size: 18px;" class="form-control" id="opt3" name="opt3" placeholder="Option 3" required>
       </div>
       <div class="form-group">
-        <input type="text" class="form-control" id="opt3" name="opt3" placeholder="Option 3" required>
+        <input type="text" style="font-size: 18px;" class="form-control" id="opt4" name="opt4" placeholder="Option 4" required>
       </div>
-      <div class="form-group">
-        <input type="text" class="form-control" id="opt4" name="opt4" placeholder="Option 4" required>
-      </div>
-      <button type="submit" class="btn btn-primary">Create Question</button>
+      <button type="submit" class="btn btn-primary" style="font-size: 25px;font-weight: 600;background:#0a0b68cc;">Create Question</button>
     </form>
-   </div>
     <script >
       {% if LimitExceeded %}
         alert("You have already created created maximum Questions per user");

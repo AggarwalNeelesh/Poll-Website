@@ -1,68 +1,122 @@
 {% extends "polling/index.html" %}
 {% block userProfile %}
-    <div class="conainer px-5"><h1 >User Profile</h1></div>
-        <div class="card mb-4 container-fluid px-5">
-          <div class="card-body">
+    <div class="conainer px-5" style="font-size: 30px;margin-left: 70px;margin-bottom: 15px;color: #17a2b8;font-weight: 600;">User Profile</div>
+        <div class="card mb-4 container px-5 " style="margin-left: 100px;margin-right: 100px;">
+          <div class="card-body mx-20">
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Full Name</p>
+              <div class="col-sm-4">
+                <p class="mb-0 userdetails">Full Name</p>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{name}}</p>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 userdetails">{{name}}</p>
               </div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Email</p>
+              <div class="col-sm-4">
+                <p class="mb-0 userdetails">Email</p>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{email}}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Phone</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{phone}}</p>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 userdetails">{{email}}</p>
               </div>
             </div>
             <hr>
             <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">No. of Question Created</p>
+              <div class="col-sm-4">
+                <p class="mb-0 userdetails">Phone</p>
               </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{question}}</p>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 userdetails">{{phone}}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-4">
+                <p class="mb-0 userdetails">No. of Question Created</p>
+              </div>
+              <div class="col-sm-8">
+                <p class="text-muted mb-0 userdetails">{{question}}</p>
               </div>
             </div>
 
           </div>
         </div>
     <br>
-    <h2 class="px-5">Questions Created by User :- </h2>
+    <h2 class="px-5" style="font-size:30px;margin-left: 70px;color: #17a2b8;font-weight: 600;">Questions Created by User :- </h2>
    {% for i in quesList %}
-    <div class="container mt-sm-5 my-1" >
-        <div class="question ml-sm-5 pl-sm-5 pt-2">
-            <div class="py-2 h5"><b>{{i.question}}</b></div>
-            <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
-                <input type='hidden' name='qid' value="{{i.Q_id}}">
-                <label class="options">{{i.op1}}
-                    <span class="checkmark"></span>
-                </label>
-                <label class="options">{{i.op2}}
-                    <span class="checkmark"></span>
-                </label>
-                <label class="options">{{i.op3}}
-                    <span class="checkmark"></span>
-                </label>
-                <label class="options">{{i.op4}}
-                    <span class="checkmark"></span>
-                </label>
+    <div class="questionContainer container mt-sm-5 my-1" style="margin:auto;" >
+            <div >
+                <div class="py-2 h2 mx-2 mb-5"><b>{{i.question}}</b></div>
+                <div class="" id="options">
+                    <input type='hidden' name='qid' value="{{i.Q_id}}">
+
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label class="options h3">{{i.op1}}
+                                        <input type="radio" id="op" name="op" value="1">
+                                        <span class="checkmark">
+                                        </span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>[ {{i.vop1}} Votes ]</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label class="options h3">{{i.op2}}
+                                        <input type="radio" id="op" name="op" value="2">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>[ {{i.vop2}} Votes ]</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label class="options h3">{{i.op3}}
+                                        <input type="radio" id="op" name="op" value="3">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>[ {{i.vop3}} Votes ]</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="row">
+                                <div class="col-9">
+                                    <label class="options h3">{{i.op4}}
+                                        <input type="radio" id="op" name="op" value="4">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                                <div class="col-3">
+                                    {% if i.alreadyVoted %}
+                                        <span class='vop'>[ {{i.vop4}} Votes ]</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
     {% endfor %}
 {% endblock %}
