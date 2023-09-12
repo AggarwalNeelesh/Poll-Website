@@ -1,8 +1,9 @@
 {% extends "polling/index.html" %}
 {% block createQuestion %}
-    <h1 style="font-size: 30px;margin-left: 70px;color: #17a2b8;font-weight: 600;">Create Question</h1>
+ <div class="container">
+   <h1 style="font-size: 35px;margin-left: 70px;color: #17a2b8;font-weight: 600;" class="container">Create Question</h1>
 
-    <form id="question-form" class="form questionContainer" style="margin-left: 70px;" action="http://127.0.0.1:8000/createquestion/" method="post">{% csrf_token %}
+    <form id="question-form" class="form questionContainer container" style="margin-left: 70px;" action="http://127.0.0.1:8000/createquestion/" method="post">{% csrf_token %}
       <div class="form-group">
         <label for="exampleFormControlInput1" style="font-size: 25px;font-weight: 600;">Question</label>
         <textarea style="font-size: 20px;color:black;" type="text" class="form-control" id="ques" name="ques" placeholder = "Write your Question" required></textarea>
@@ -27,6 +28,8 @@
       </div>
       <button type="submit" class="btn btn-primary" style="font-size: 25px;font-weight: 600;background:#0a0b68cc;">Create Question</button>
     </form>
+ </div>
+
     <script >
       {% if LimitExceeded %}
         alert("You have already created created maximum Questions per user");
