@@ -1,7 +1,14 @@
 # Poll-Website
-A poll application in which a user can create poll and ask questions.
-Other users can give their answers as votes.
-User first have to register himself than login to access poll all Questions.
+
+# Key features 
+• User Interaction: Upon successful login, users are presented with a user-friendly interface that allows them to seamlessly cast their votes for the questions displayed.
+
+• Voting Mechanism: Users can express their opinions by participating in the voting process for questions that intrigue them. This interactive feature encourages user engagement and promotes healthy discussions.
+
+• Question Posting: Users are empowered to contribute to the platform's content by posting their own questions. This enables a diverse range of topics and perspectives to be shared within the community.
+
+• Community Engagement: By offering the ability to both vote on existing questions and pose new ones, the Polling Website fosters a vibrant online community where users actively collaborate and share insights.
+
 
 Registration/Login page
 • User can register new account
